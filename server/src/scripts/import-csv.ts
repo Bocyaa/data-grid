@@ -4,21 +4,46 @@ import Papa from 'papaparse';
 import { prisma } from 'lib/prisma';
 
 (async () => {
-  const filePath = path.join(__dirname, '../data/ElectricCarData.csv');
-  const csv = fs.readFileSync(filePath, 'utf8');
+  try {
+    const filePath = path.join(__dirname, 'data/ElectricCarData.csv');
+    const csv = fs.readFileSync(filePath, 'utf8');
 
-  const parsed = Papa.parse(csv, {
-    header: true,
-    dynamicTyping: true,
-  });
+    const parsed = Papa.parse(csv, {
+      header: true,
+      dynamicTyping: true,
+    });
 
-  await prisma.dataset.create({
-    data: {
-      name: 'Electric Car Dataset',
-      rows: parsed.data as object[],
-    },
-  });
+    if (!parsed.data || !Array.isArray(parsed.data)) {
+      throw new Error('CSV parsing failed or data is invalid.');
+    }
 
-  console.log('CSV data imported into database.');
-  await prisma.$disconnect();
+    // Step 1: Create the dataset entry
+    const dataset = await prisma.dataset.create({
+      data: {
+        name: 'Electric Car Dataset',
+      },
+    });
+
+    // Step 2: Insert each CSV row as a Row linked to the Dataset
+    const rowsToInsert = parsed.data as object[];
+
+    await prisma.$transaction(
+      rowsToInsert.map((row) =>
+        prisma.row.create({
+          data: {
+            datasetId: dataset.id,
+            data: row,
+          },
+        })
+      )
+    );
+
+    console.log(
+      `✅ Imported ${rowsToInsert.length} rows into dataset '${dataset.name}' (ID: ${dataset.id})`
+    );
+  } catch (error) {
+    console.error('❌ Error importing CSV:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
 })();

@@ -9,8 +9,15 @@ datasource db {
 }
 
 model Dataset {
-  id Int @id @default(autoincrement())
-  name String
+  id        Int     @id @default(autoincrement())
+  name      String
   createdAt DateTime @default(now())
-  rows Json // stores array of objects
+  rows      Row[]
+}
+
+model Row {
+  id         Int     @id @default(autoincrement())
+  datasetId  Int
+  data       Json
+  dataset    Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
 }
