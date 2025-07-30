@@ -1,6 +1,7 @@
 node_modules
 .env
 
-scripts
-/src/scripts/import-csv.ts
 /src/generated/prisma
+/src/scripts
+
+
