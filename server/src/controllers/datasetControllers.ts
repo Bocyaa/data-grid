@@ -5,7 +5,7 @@ import isJsonObject from 'utils/isJsonObject';
 
 export async function getAllDatasets(req: Request, res: Response) {
   const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 10;
+  const limit = parseInt(req.query.limit as string) || 50;
   const sort = (req.query.sort as string) || 'createdAt';
   const order =
     (req.query.order as string)?.toLowerCase() === 'asc' ? 'asc' : 'desc';
@@ -83,32 +83,67 @@ export async function getAllDatasets(req: Request, res: Response) {
 
 export async function getDatasetById(req: Request, res: Response) {
   const datasetId = parseInt(req.params.id);
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 50;
 
   if (isNaN(datasetId)) {
     throw { status: 400, message: 'Invalid dataset ID' };
   }
 
+  const skip = (page - 1) * limit;
+
+  // First, check if dataset exists and get basic info
   const dataset = await prisma.dataset.findUnique({
     where: { id: datasetId },
-    include: { rows: true },
   });
 
   if (!dataset) {
     throw { status: 400, message: 'Dataset not found' };
   }
 
-  const rows = dataset.rows.map((r) => r.data);
+  // Get total count of rows for this dataset
+  const totalRows = await prisma.row.count({
+    where: { datasetId },
+  });
+
+  // Get paginated rows
+  const rows = await prisma.row.findMany({
+    where: { datasetId },
+    skip,
+    take: limit,
+    orderBy: { id: 'asc' },
+  });
+
+  const rowData = rows.map((r) => r.data);
   let columns: string[] = [];
 
-  if (rows.length > 0 && isJsonObject(rows[0])) {
-    columns = Object.keys(rows[0]);
+  // Get columns from the first row if available
+  if (rowData.length > 0 && isJsonObject(rowData[0])) {
+    columns = Object.keys(rowData[0]);
+  } else if (totalRows > 0) {
+    // If current page has no rows but dataset has rows, get columns from first row in dataset
+    const firstRow = await prisma.row.findFirst({
+      where: { datasetId },
+      orderBy: { id: 'asc' },
+    });
+    if (firstRow && isJsonObject(firstRow.data)) {
+      columns = Object.keys(firstRow.data);
+    }
   }
 
   res.json({
     success: true,
     data: {
-      rows,
+      rows: rowData,
       columns,
+      pagination: {
+        page,
+        limit,
+        total: totalRows,
+        totalPages: Math.ceil(totalRows / limit),
+        hasNextPage: page * limit < totalRows,
+        hasPrevPage: page > 1,
+      },
     },
     message: 'Dataset found',
   });
