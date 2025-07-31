@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Route, Routes } from 'react-router';
+import AppLayout from './layout/AppLayout';
+import DataGrid from './pages/DataGrid';
+import DropDown from './pages/DropDown';
+import DataGridLayout from './layout/DataGridLayout';
+import RowDetail from './pages/RowDetail';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      refetchOnWindowFocus: false, // Don't refetch on window regain focus
+      refetchOnMount: 'always', // Always refetch when component mounts
+      refetchOnReconnect: true, // Refetch when reconnecting
+      retry: 3, // Prevent infinite loading (limit 3)
+      retryDelay: (i) => Math.min(1000 * 2 ** i, 30_000),
+      networkMode: 'online', // Run when online only
+    },
+  },
+});
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route index element={<DropDown />} />
+            <Route path=':datasetId' element={<DataGridLayout />}>
+              <Route index element={<DataGrid />} />
+              <Route path=':rowId' element={<RowDetail />} />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
