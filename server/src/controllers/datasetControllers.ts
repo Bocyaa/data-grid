@@ -17,7 +17,20 @@ export async function getAllDatasets(req: Request, res: Response) {
 
   const total = await prisma.dataset.count();
 
-  // Get datasets along with their related rows
+  // Handle empty database case
+  if (total === 0) {
+    return res.json({
+      success: true,
+      data: {
+        page,
+        limit,
+        total: 0,
+        data: [],
+      },
+      message: 'No datasets found. Upload a CSV file to get started.',
+    });
+  }
+
   const datasets = await prisma.dataset.findMany({
     orderBy: { [sort]: order },
     skip,
@@ -27,7 +40,6 @@ export async function getAllDatasets(req: Request, res: Response) {
     },
   });
 
-  // Format and filter each dataset
   const enriched = datasets.map((dataset) => {
     const rawRows = dataset.rows.map((r) => r.data);
 
@@ -55,18 +67,25 @@ export async function getAllDatasets(req: Request, res: Response) {
   });
 
   res.json({
-    page,
-    limit,
-    total,
-    data: enriched,
+    success: true,
+    data: {
+      page,
+      limit,
+      total,
+      data: enriched,
+    },
+    message:
+      enriched.length > 0
+        ? 'Datasets found'
+        : 'No datasets match your criteria',
   });
 }
 
-export async function getSingleDataset(req: Request, res: Response) {
+export async function getDatasetById(req: Request, res: Response) {
   const datasetId = parseInt(req.params.id);
 
   if (isNaN(datasetId)) {
-    return res.status(400).json({ error: 'Invalid dataset ID' });
+    throw { status: 400, message: 'Invalid dataset ID' };
   }
 
   const dataset = await prisma.dataset.findUnique({
@@ -75,7 +94,7 @@ export async function getSingleDataset(req: Request, res: Response) {
   });
 
   if (!dataset) {
-    return res.status(404).json({ error: 'Dataset not found' });
+    throw { status: 400, message: 'Dataset not found' };
   }
 
   const rows = dataset.rows.map((r) => r.data);
@@ -85,15 +104,22 @@ export async function getSingleDataset(req: Request, res: Response) {
     columns = Object.keys(rows[0]);
   }
 
-  res.json({ rows, columns });
+  res.json({
+    success: true,
+    data: {
+      rows,
+      columns,
+    },
+    message: 'Dataset found',
+  });
 }
 
-export async function getRow(req: Request, res: Response) {
+export async function getDatasetRowById(req: Request, res: Response) {
   const datasetId = parseInt(req.params.datasetId);
   const rowId = parseInt(req.params.rowId);
 
   if (isNaN(datasetId) || isNaN(rowId)) {
-    return res.status(400).json({ error: 'Invalid params' });
+    throw { status: 400, message: 'Invalid params' };
   }
 
   const row = await prisma.row.findFirst({
@@ -103,12 +129,76 @@ export async function getRow(req: Request, res: Response) {
     },
   });
 
-  if (!row) return res.status(404).json({ error: 'Row not found' });
+  if (!row) throw { status: 400, message: 'Row not found' };
 
-  res.json({ id: row.id, data: row.data });
+  res.json({
+    success: true,
+    data: {
+      id: row.id,
+      data: row.data,
+    },
+    message: 'Row found',
+  });
 }
 
-export async function createDataset(req: Request, res: Response) {
+export async function deleteDatasetById(req: Request, res: Response) {
+  const datasetId = parseInt(req.params.datasetId);
+
+  if (isNaN(datasetId)) {
+    throw { status: 400, message: 'Invalid dataset ID' };
+  }
+
+  try {
+    await prisma.dataset.delete({
+      where: { id: datasetId },
+    });
+
+    res.json({
+      success: true,
+      data: null,
+      message: `Dataset ${datasetId} deleted`,
+    });
+  } catch (error) {
+    console.log(error);
+    throw { status: 500, message: 'Failed to delete dataset' };
+  }
+}
+
+export async function deleteRowById(req: Request, res: Response) {
+  const datasetId = parseInt(req.params.datasetId);
+  const rowId = parseInt(req.params.rowId);
+
+  if (isNaN(datasetId) || isNaN(rowId)) {
+    throw { status: 400, message: 'Invalid ID format' };
+  }
+
+  try {
+    const row = await prisma.row.findFirst({
+      where: { id: rowId, datasetId },
+    });
+
+    if (!row) {
+      throw { status: 404, message: 'Row not found' };
+    }
+
+    await prisma.row.delete({
+      where: { id: rowId },
+    });
+
+    res.status(201).json({
+      success: true,
+      data: {
+        rowId: rowId,
+        datasetId: datasetId,
+      },
+      message: `Row ${rowId} deleted from dataset ${datasetId}.`,
+    });
+  } catch (error) {
+    throw { status: 500, message: 'Failed to delete row' };
+  }
+}
+
+export async function uploadDataset(req: Request, res: Response) {
   const file = req.file;
 
   if (!file) {
@@ -135,56 +225,15 @@ export async function createDataset(req: Request, res: Response) {
     );
 
     res.status(201).json({
-      message: 'Dataset created',
-      datasetId: dataset.id,
-      rowCount: rows.length,
+      success: true,
+      data: {
+        datasetId: dataset.id,
+        rowCount: rows.length,
+      },
+      message: 'Dataset uploaded',
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to import CSV', detail: error });
-  }
-}
-
-export async function deleteDataset(req: Request, res: Response) {
-  const datasetId = parseInt(req.params.datasetId);
-
-  if (isNaN(datasetId)) {
-    return res.status(400).json({ error: 'Invalid dataset ID.' });
-  }
-
-  try {
-    await prisma.dataset.delete({
-      where: { id: datasetId },
-    });
-
-    res.json({ message: `Dataset ${datasetId} deleted successfully.` });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete dataset.', detail: error });
-  }
-}
-
-export async function deleteRow(req: Request, res: Response) {
-  const datasetId = parseInt(req.params.datasetId);
-  const rowId = parseInt(req.params.rowId);
-
-  if (isNaN(datasetId) || isNaN(rowId)) {
-    return res.status(400).json({ error: 'Invalid ID format.' });
-  }
-
-  try {
-    const row = await prisma.row.findFirst({
-      where: { id: rowId, datasetId },
-    });
-
-    if (!row) {
-      return res.status(404).json({ error: 'Row not found.' });
-    }
-
-    await prisma.row.delete({
-      where: { id: rowId },
-    });
-
-    res.json({ message: `Row ${rowId} deleted from dataset ${datasetId}` });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete row.', detail: error });
+    console.log(error);
+    throw { status: 500, message: 'Failed to upload CSV' };
   }
 }

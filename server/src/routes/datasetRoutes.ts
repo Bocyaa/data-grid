@@ -1,24 +1,44 @@
 import express from 'express';
 import multer from 'multer';
 import {
-  deleteDataset,
-  deleteRow,
   getAllDatasets,
-  getRow,
-  getSingleDataset,
-  createDataset,
+  getDatasetById,
+  getDatasetRowById,
+  deleteDatasetById,
+  deleteRowById,
+  uploadDataset,
 } from 'controllers/datasetControllers';
+
+import { validateQuery, validateParams } from 'middleware/validate';
+
+import {
+  getDatasetQuerySchema,
+  datasetIdSchema,
+  rowIdSchema,
+} from 'validators/datasetValidators';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get('/datasets', getAllDatasets);
-router.get('/dataset/:id', getSingleDataset);
-router.get('/dataset/:datasetId/:rowId', getRow);
+router.get('/datasets', validateQuery(getDatasetQuerySchema), getAllDatasets);
+router.get('/dataset/:id', validateParams(datasetIdSchema), getDatasetById);
+router.get(
+  '/dataset/:datasetId/:rowId',
+  validateParams(rowIdSchema),
+  getDatasetRowById
+);
 
-router.post('/dataset', upload.single('file'), createDataset);
+router.delete(
+  '/dataset/:datasetId',
+  validateParams(datasetIdSchema),
+  deleteDatasetById
+);
+router.delete(
+  '/dataset/:datasetId/:rowId',
+  validateParams(rowIdSchema),
+  deleteRowById
+);
 
-router.delete('/dataset/:datasetId', deleteDataset);
-router.delete('/dataset/:datasetId/:rowId', deleteRow);
+router.post('/dataset', upload.single('file'), uploadDataset);
 
 export default router;
