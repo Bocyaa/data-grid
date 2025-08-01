@@ -1,10 +1,14 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router';
+import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import AppLayout from './layout/AppLayout';
 import DataGrid from './pages/DataGrid';
-import DropDown from './pages/DropDown';
+import DatasetList from './pages/DatasetList';
 import DataGridLayout from './layout/DataGridLayout';
 import RowDetail from './pages/RowDetail';
+
+// Register AG Grid Community modules
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,7 +31,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<DropDown />} />
+            <Route index element={<DatasetList />} />
             <Route path=':datasetId' element={<DataGridLayout />}>
               <Route index element={<DataGrid />} />
               <Route path=':rowId' element={<RowDetail />} />

@@ -2,7 +2,7 @@ import { useDatasets } from '../hooks/useDatasets';
 import { Link } from 'react-router';
 import type { Dataset } from '../types/api';
 
-function DropDown() {
+function DatasetList() {
   const { data: datasetsResponse, isLoading, error } = useDatasets();
   const datasets = datasetsResponse?.data?.data || [];
 
@@ -66,4 +66,4 @@ function DropDown() {
   );
 }
 
-export default DropDown;
+export default DatasetList;
