@@ -21,7 +21,11 @@ const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.get('/datasets', validateQuery(getDatasetQuerySchema), getAllDatasets);
-router.get('/dataset/:id', validateParams(datasetIdSchema), getDatasetById);
+router.get(
+  '/dataset/:datasetId',
+  validateParams(datasetIdSchema),
+  getDatasetById
+);
 router.get(
   '/dataset/:datasetId/:rowId',
   validateParams(rowIdSchema),

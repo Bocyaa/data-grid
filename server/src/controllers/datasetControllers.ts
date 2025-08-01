@@ -82,7 +82,7 @@ export async function getAllDatasets(req: Request, res: Response) {
 }
 
 export async function getDatasetById(req: Request, res: Response) {
-  const datasetId = parseInt(req.params.id);
+  const datasetId = parseInt(req.params.datasetId);
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 50;
 
@@ -114,12 +114,12 @@ export async function getDatasetById(req: Request, res: Response) {
     orderBy: { id: 'asc' },
   });
 
-  const rowData = rows.map((r) => r.data);
+  const rowData = rows.map((r) => ({ id: r.id, data: r.data }));
   let columns: string[] = [];
 
   // Get columns from the first row if available
-  if (rowData.length > 0 && isJsonObject(rowData[0])) {
-    columns = Object.keys(rowData[0]);
+  if (rowData.length > 0 && isJsonObject(rowData[0].data)) {
+    columns = Object.keys(rowData[0].data);
   } else if (totalRows > 0) {
     // If current page has no rows but dataset has rows, get columns from first row in dataset
     const firstRow = await prisma.row.findFirst({

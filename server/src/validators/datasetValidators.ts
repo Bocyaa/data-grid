@@ -10,7 +10,7 @@ export const getDatasetQuerySchema = z.object({
 });
 
 export const datasetIdSchema = z.object({
-  id: z.coerce.number().int().positive(),
+  datasetId: z.coerce.number().int().positive(),
 });
 
 export const rowIdSchema = z.object({
