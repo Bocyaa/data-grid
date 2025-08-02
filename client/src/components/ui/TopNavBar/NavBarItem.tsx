@@ -3,14 +3,20 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 interface ItemProps {
   title: string;
   onClick: () => void;
+  onClose?: () => void;
   isActive?: boolean;
 }
 
-function NavBarItem({ title, onClick, isActive = false }: ItemProps) {
+function NavBarItem({ title, onClick, onClose, isActive = false }: ItemProps) {
+  const handleCloseClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the main onClick
+    onClose?.();
+  };
+
   return (
     <button
       onClick={onClick}
-      className={`relative flex w-48 border-r border-b pl-4 overflow-hidden items-center justify-between z-10 border-[#eeeeec] group hover:bg-[#f1f0ef] cursor-pointer shrink-0 ${
+      className={`relative flex min-w-28 max-w-48 border-r border-b pl-4 pr-8 overflow-hidden items-center z-10 border-[#eeeeec] group hover:bg-[#f1f0ef] cursor-pointer shrink-0 ${
         isActive ? 'bg-white border-b-white' : ''
       }`}
     >
@@ -22,9 +28,14 @@ function NavBarItem({ title, onClick, isActive = false }: ItemProps) {
         {title}
       </span>
 
-      <button className='absolute flex justify-center items-center right-0 inset-y-0 z-10 pr-2 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'>
-        <CloseOutlinedIcon className='!w-5 !h-5 !text-[#91918e] hover:bg-[#e8e7e7] rounded-sm transition-colors' />
-      </button>
+      {onClose && (
+        <button
+          onClick={handleCloseClick}
+          className='absolute flex justify-center items-center right-0 inset-y-0 z-10 pr-2 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
+        >
+          <CloseOutlinedIcon className='!w-5 !h-5 !text-[#91918e] hover:bg-[#e8e7e7] rounded-sm transition-colors' />
+        </button>
+      )}
 
       {/* Hides Text Overflow */}
       <div

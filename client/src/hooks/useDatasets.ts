@@ -1,8 +1,15 @@
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import {
+  useQuery,
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import {
   fetchDatasets,
   fetchDatasetById,
   fetchDatasetRow,
+  uploadDataset,
+  deleteDataset,
 } from '../api/datasets';
 import type { DatasetsQueryParams, DatasetQueryParams } from '../types/api';
 
@@ -52,5 +59,37 @@ export function useInfiniteDataset(datasetId: number, limit = 50) {
     },
     enabled: !!datasetId,
     staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+
+// Hook to upload a new dataset
+export function useUploadDataset() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: uploadDataset,
+    onSuccess: () => {
+      // Invalidate all datasets queries to refetch with the new data
+      queryClient.invalidateQueries({
+        queryKey: ['datasets'],
+        exact: false, // This will match all queries that start with ['datasets']
+      });
+    },
+  });
+}
+
+// Hook to delete a dataset
+export function useDeleteDataset() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteDataset,
+    onSuccess: () => {
+      // Invalidate all datasets queries (with any params)
+      queryClient.invalidateQueries({
+        queryKey: ['datasets'],
+        exact: false, // This will match all queries that start with ['datasets']
+      });
+    },
   });
 }

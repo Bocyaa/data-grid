@@ -12,7 +12,7 @@ function TablesListContainer({ children }: ComponentProps) {
         variant='overline'
         className='!text-sm !font-semibold !text-[#91918e] !pb-2 !px-2 !block'
       >
-        Tables
+        Datasets
       </Typography>
       <div className='flex flex-col gap-1 pb-2'>{children}</div>
     </div>

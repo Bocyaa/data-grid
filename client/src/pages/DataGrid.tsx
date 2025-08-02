@@ -1,16 +1,14 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { ScaleLoader } from 'react-spinners';
+
 import { AgGridReact } from 'ag-grid-react';
+
 import type {
   GridApi,
   GridReadyEvent,
   RowDoubleClickedEvent,
 } from 'ag-grid-community';
-
-// Import AG Grid CSS
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
 
 import { useDataset } from '../hooks/useDatasets';
 
@@ -22,7 +20,6 @@ function DataGrid() {
 
   const navigate = useNavigate();
 
-  // Fetch dataset data using React Query with caching
   const {
     data: datasetResponse,
     isLoading,
@@ -145,10 +142,7 @@ function DataGrid() {
 
       {/* AG Grid Container with fixed height */}
       <div className='flex-1 p-4'>
-        <div
-          className='ag-theme-quartz w-full border border-gray-200 rounded-lg shadow-sm'
-          style={{ height: 'calc(100vh - 200px)' }}
-        >
+        <div className='' style={{ height: 'calc(100vh - 12.5rem)' }}>
           {!isLoading ? (
             <AgGridReact
               rowData={rowData}
@@ -159,8 +153,8 @@ function DataGrid() {
               rowSelection='single'
               enableCellTextSelection={true}
               animateRows={true}
-              headerHeight={40}
-              rowHeight={35}
+              headerHeight={45}
+              rowHeight={40}
               defaultColDef={{
                 sortable: true,
                 filter: true,
@@ -186,7 +180,7 @@ function DataGrid() {
         </div>
       </div>
 
-      {/* Footer with additional pagination */}
+      {/* Footer with additional info */}
       <div className='bg-white border-t border-gray-200 px-6 py-5 flex-shrink-0'>
         {dataset ? (
           <div className='flex items-center justify-between text-sm text-gray-600'>

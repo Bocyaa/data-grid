@@ -15,7 +15,7 @@
 | Icon Stroke II | `#a6a299`  | `#`       |
 | Icon Label II  | `#5f5e5b`  | `#`       |
 |                |            |           |
-| Divider        | `#eeeeec`  | `#`       |
+| Divider        | `#eeeeec`  | `#`       | `#e5e5e5` |
 |                |            |           |
 | Border (Btn)   | `#`        | `#`       |
 | Border (Inp)   | `#`        | `#`       |

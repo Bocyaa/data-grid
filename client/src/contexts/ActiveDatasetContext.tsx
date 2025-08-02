@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 interface ActiveDatasetContextType {
   activeDatasetId: string | null;
   isDatasetActive: (datasetId: number | string) => boolean;
+  isHomeActive: boolean;
 }
 
 export const ActiveDatasetContext = createContext<
@@ -21,8 +22,10 @@ export function ActiveDatasetProvider({
   const { datasetId } = useParams<{ datasetId: string }>();
 
   const activeDatasetId = datasetId || null;
+  const isHomeActive = !datasetId; // Home is active when there's no datasetId
 
   const isDatasetActive = (datasetId: number | string): boolean => {
+    if (datasetId === 'home') return isHomeActive;
     if (!activeDatasetId) return false;
     return String(datasetId) === activeDatasetId;
   };
@@ -30,6 +33,7 @@ export function ActiveDatasetProvider({
   const value: ActiveDatasetContextType = {
     activeDatasetId,
     isDatasetActive,
+    isHomeActive,
   };
 
   return (

@@ -77,3 +77,39 @@ export async function fetchDatasetRow(
 
   return response.json();
 }
+
+// Upload CSV dataset
+export async function uploadDataset(file: File): Promise<{
+  success: boolean;
+  data: { datasetId: number; rowCount: number };
+  message: string;
+}> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${API_BASE_URL}/dataset`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to upload dataset: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+// Delete dataset
+export async function deleteDataset(
+  datasetId: number
+): Promise<{ success: boolean; message: string }> {
+  const response = await fetch(`${API_BASE_URL}/dataset/${datasetId}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete dataset: ${response.statusText}`);
+  }
+
+  return response.json();
+}

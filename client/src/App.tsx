@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { Toaster } from 'react-hot-toast';
 import AppLayout from './layout/AppLayout';
 import DataGrid from './pages/DataGrid';
-import DatasetList from './pages/DatasetList';
+import Home from './pages/Home';
 import DataGridLayout from './layout/DataGridLayout';
 import RowDetail from './pages/RowDetail';
 
@@ -31,7 +32,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<DatasetList />} />
+            <Route index element={<Home />} />
             <Route path=':datasetId' element={<DataGridLayout />}>
               <Route index element={<DataGrid />} />
               <Route path=':rowId' element={<RowDetail />} />
@@ -39,6 +40,25 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <Toaster
+        position='top-center'
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#ffffff',
+            color: '#0d0d0d',
+            border: '1px solid #e5e5e5',
+          },
+          success: {
+            duration: 4000,
+            icon: null,
+          },
+          error: {
+            duration: 4000,
+            icon: null,
+          },
+        }}
+      />
     </QueryClientProvider>
   );
 }

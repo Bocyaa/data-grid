@@ -1,11 +1,17 @@
-import StorageIcon from '@mui/icons-material/Storage';
+import { useNavigate } from 'react-router';
 
 function LogoTitle() {
+  const navigate = useNavigate();
+
   return (
-    <div className='flex items-end py-3 px-4 gap-3'>
-      <h1 className='text-4xl font-bold text-[#5f5e5b] leading-8'>DataGrid</h1>
-      <StorageIcon className='!w-9 !h-9 text-[#5f5e5b] !translate-y-0.5' />
-    </div>
+    <button
+      onClick={() => navigate('/')}
+      className='flex items-center py-2 px-4 gap-3 group cursor-pointer border-b border-[#eeeeec] w-full h-12'
+    >
+      <h1 className='text-3xl font-bold text-[#5f5e5b] group-hover:text-[#32302c]'>
+        DataGrid
+      </h1>
+    </button>
   );
 }
 

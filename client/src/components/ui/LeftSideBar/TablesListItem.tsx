@@ -37,7 +37,7 @@ function TablesListItem({
           primary={children}
           slotProps={{
             primary: {
-              className: `!font-medium !text-base ${
+              className: `!font-medium !text-base !whitespace-nowrap overflow-hidden ${
                 isActive ? '!text-[#3b3b3b]' : '!text-[#5f5e5b]'
               }`,
             },
