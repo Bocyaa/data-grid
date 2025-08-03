@@ -4,6 +4,11 @@ A modern full-stack web application for visualizing, editing, and managing CSV d
 
 [![Live Demo](https://img.shields.io/badge/🚀-Live%20Demo-blue?style=for-the-badge)](https://data-grid-six.vercel.app/)
 
+## 📖 Documentation
+
+- **[Frontend Documentation](./client/README.md)** - Detailed React app architecture, components, and development setup
+- **[Backend Documentation](./server/README.md)** - API endpoints, database schema, and server configuration
+
 ## Features
 
 ### 🗂️ Dataset Management
@@ -116,11 +121,6 @@ data-grid/
 │   └── README.md           # Backend documentation
 └── README.md               # This file
 ```
-
-## 📖 Documentation
-
-- **[Frontend Documentation](./client/README.md)** - Detailed React app architecture, components, and development setup
-- **[Backend Documentation](./server/README.md)** - API endpoints, database schema, and server configuration
 
 ## 🎯 Use Cases
 
