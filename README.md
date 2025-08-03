@@ -3,11 +3,10 @@
 A modern full-stack web application for visualizing, editing, and managing CSV datasets with an interactive data grid interface.
 
 [![Live Demo](https://img.shields.io/badge/🚀-Live%20Demo-blue?style=for-the-badge)](https://your-demo-link.com)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
 ![DataGrid Preview](https://via.placeholder.com/800x400/0094f6/ffffff?text=DataGrid+Application+Preview)
 
-## ✨ Features
+## Features
 
 ### 🗂️ Dataset Management
 
@@ -156,29 +155,6 @@ The backend provides a RESTful API for all data operations:
 - `DELETE /api/dataset/:id` - Remove entire dataset
 
 Full API documentation available in the [server README](./server/README.md).
-
-## 🚀 Deployment
-
-### Frontend (Static Hosting)
-
-The client builds to static files and can be deployed to:
-
-- Vercel
-- Netlify
-- GitHub Pages
-- Any static hosting service
-
-### Backend (Node.js Hosting)
-
-The server can be deployed to:
-
-- Railway
-- Heroku
-- DigitalOcean
-- AWS/GCP/Azure
-- Any Node.js hosting platform
-
-Detailed deployment instructions are available in the respective README files.
 
 ## 📝 License
 
