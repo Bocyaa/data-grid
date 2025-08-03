@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router';
 import { useActiveDataset } from '@/contexts/hooks/useActiveDataset';
 import { useNavBarTabs } from '@/contexts/hooks/useNavBarTabs';
 
-import NavBarItem from './ui/TopNavBar/NavBarItem';
-import PlusBtn from './ui/TopNavBar/PlusBtn';
+import NavBarItem from '@/components/ui/TopNavBar/NavBarItem';
+import PlusBtn from '@/components/ui/TopNavBar/PlusBtn';
 
 function TopNavBar() {
   const { isDatasetActive, activeDatasetId, isHomeActive } = useActiveDataset();

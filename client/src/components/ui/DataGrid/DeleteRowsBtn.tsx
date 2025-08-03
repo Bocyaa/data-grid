@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import type { ConfirmDialogState } from '../../../types';
+import type { ConfirmDialogState } from '@/types';
 
 interface ButtonProps {
   selectedRows: number[];

@@ -1,9 +1,9 @@
-import SectionTitle from '../components/ui/HomePage/SectionTitle';
-import DatasetCard from '../components/ui/HomePage/DatasetCard';
-import DropDownCard from '../components/ui/HomePage/DropDownCard';
+import SectionTitle from '@/components/ui/HomePage/SectionTitle';
+import DatasetCard from '@/components/ui/HomePage/DatasetCard';
+import DropDownCard from '@/components/ui/HomePage/DropDownCard';
 
-import type { Dataset } from '../types/api';
-import { useDatasets } from '../hooks/useDatasets';
+import type { Dataset } from '@/types/api';
+import { useDatasets } from '@/hooks/useDatasets';
 
 function Home() {
   const { data: datasetsResponse, isLoading, error } = useDatasets();

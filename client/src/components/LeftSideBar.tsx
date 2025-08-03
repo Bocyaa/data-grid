@@ -4,11 +4,11 @@ import { useDatasets } from '@/hooks/useDatasets';
 import { useActiveDataset } from '@/contexts/hooks/useActiveDataset';
 import { useNavBarTabs } from '@/contexts/hooks/useNavBarTabs';
 
-import LogoTitle from './ui/LeftSideBar/LogoTitle';
-import Signature from './ui/LeftSideBar/Signature';
-import TablesListContainer from './ui/LeftSideBar/TablesListContainer';
-import TablesListItem from './ui/LeftSideBar/TablesListItem';
-import UploadButton from './ui/LeftSideBar/UploadButton';
+import LogoTitle from '@/components/ui/LeftSideBar/LogoTitle';
+import Signature from '@/components/ui/LeftSideBar/Signature';
+import TablesListContainer from '@/components/ui/LeftSideBar/TablesListContainer';
+import TablesListItem from '@/components/ui/LeftSideBar/TablesListItem';
+import UploadButton from '@/components/ui/LeftSideBar/UploadButton';
 
 function LeftSideBar() {
   const { data: datasetsResponse } = useDatasets();

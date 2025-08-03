@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router';
+import { IconButton, Tooltip } from '@mui/material';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { useNavBarTabs } from '@/contexts/hooks/useNavBarTabs';
 
@@ -14,12 +15,15 @@ function PlusBtn() {
   };
 
   return (
-    <button
-      onClick={handleClick}
-      className='cursor-pointer hover:bg-[#f1f0ef] rounded-md transition-colors'
-    >
-      <AddOutlinedIcon className='!w-6 !h-6 !text-[#91918e]' />
-    </button>
+    <Tooltip title='Go to Home'>
+      <IconButton
+        onClick={handleClick}
+        className='!rounded-md hover:!bg-[#f1f0ef] !transition-colors'
+        size='small'
+      >
+        <AddOutlinedIcon className='!w-6 !h-6 !text-[#91918e]' />
+      </IconButton>
+    </Tooltip>
   );
 }
 

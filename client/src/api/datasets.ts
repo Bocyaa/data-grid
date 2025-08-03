@@ -1,11 +1,11 @@
-import { API_BASE_URL } from './config';
+import { API_BASE_URL } from '@/api/config';
 import type {
   DatasetsResponse,
   DatasetDetailResponse,
   DatasetRowResponse,
   DatasetsQueryParams,
   DatasetQueryParams,
-} from '../types/api';
+} from '@/types/api';
 
 // Fetch all datasets
 export async function fetchDatasets(

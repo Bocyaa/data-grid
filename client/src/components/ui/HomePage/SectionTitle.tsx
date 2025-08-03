@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material';
 import StorageIcon from '@mui/icons-material/Storage';
 
 interface SectionProps {
@@ -6,10 +7,28 @@ interface SectionProps {
 
 function SectionTitle({ title }: SectionProps) {
   return (
-    <div className='flex items-center mb-2 pl-4 gap-2 cursor-default'>
-      <StorageIcon className='!w-4 !h-4 text-[#73726e]' />
-      <h1 className='text-lg font-semibold text-[#73726e]'>{title}</h1>
-    </div>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        mb: 1,
+        pl: 2,
+        gap: 1,
+        cursor: 'default',
+      }}
+    >
+      <StorageIcon sx={{ width: '16px', height: '16px', color: '#73726e' }} />
+      <Typography
+        variant='h6'
+        sx={{
+          fontSize: '18px',
+          fontWeight: 600,
+          color: '#73726e',
+        }}
+      >
+        {title}
+      </Typography>
+    </Box>
   );
 }
 

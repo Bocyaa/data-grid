@@ -1,6 +1,14 @@
 import { useParams, useNavigate } from 'react-router';
 import { useState, useEffect } from 'react';
-import { useDatasetRow, useUpdateDatasetRow } from '../hooks/useDatasets';
+import {
+  Paper,
+  Typography,
+  Box,
+  Divider,
+  Button,
+  CircularProgress,
+} from '@mui/material';
+import { useDatasetRow, useUpdateDatasetRow } from '@/hooks/useDatasets';
 import BackBtn from '@/components/ui/RowDetail/BackBtn';
 import SaveBtn from '@/components/ui/RowDetail/SaveBtn';
 import CancelBtn from '@/components/ui/RowDetail/CancelBtn';
@@ -78,62 +86,134 @@ function RowDetail() {
   // Loading state
   if (isLoading) {
     return (
-      <div className='flex items-center justify-center h-full'>
-        <div className='text-lg'>Loading row details...</div>
-      </div>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          gap: 2,
+        }}
+      >
+        <CircularProgress size={48} sx={{ color: '#0094f6' }} />
+        <Typography variant='h6' sx={{ fontSize: '18px', color: '#6b7280' }}>
+          Loading row details...
+        </Typography>
+      </Box>
     );
   }
 
   // Error state
   if (error) {
     return (
-      <div className='flex flex-col items-center justify-center h-full'>
-        <div className='text-lg text-red-600 mb-4'>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          gap: 2,
+        }}
+      >
+        <Typography
+          variant='h6'
+          sx={{
+            fontSize: '18px',
+            color: '#dc2626',
+            textAlign: 'center',
+          }}
+        >
           Error loading row: {error.message}
-        </div>
-        <button
-          onClick={() => refetch()}
-          className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2'
-        >
-          Retry
-        </button>
-        <button
-          onClick={() => navigate(`/${datasetId}`)}
-          className='px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600'
-        >
-          Back to Dataset
-        </button>
-      </div>
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button
+            variant='contained'
+            onClick={() => refetch()}
+            sx={{
+              backgroundColor: '#0094f6',
+              '&:hover': {
+                backgroundColor: '#0073cc',
+              },
+            }}
+          >
+            Retry
+          </Button>
+          <Button
+            variant='contained'
+            onClick={() => navigate(`/${datasetId}`)}
+            sx={{
+              backgroundColor: '#6b7280',
+              '&:hover': {
+                backgroundColor: '#4b5563',
+              },
+            }}
+          >
+            Back to Dataset
+          </Button>
+        </Box>
+      </Box>
     );
   }
 
   // No data state
   if (!rowData) {
     return (
-      <div className='flex flex-col items-center justify-center h-full'>
-        <div className='text-lg mb-4'>Row not found.</div>
-        <button
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+        }}
+      >
+        <Typography variant='h6' sx={{ fontSize: '18px', mb: 2 }}>
+          Row not found.
+        </Typography>
+        <Button
+          variant='contained'
           onClick={() => navigate(`/${datasetId}`)}
-          className='px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600'
+          sx={{
+            backgroundColor: '#6b7280',
+            '&:hover': {
+              backgroundColor: '#4b5563',
+            },
+          }}
         >
           Back to Dataset
-        </button>
-      </div>
+        </Button>
+      </Box>
     );
   }
 
   return (
-    <div className='h-full flex flex-col'>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <div className='bg-white px-6 pt-4'>
-        <div className='flex items-center justify-between'>
+      <Paper
+        elevation={0}
+        sx={{
+          backgroundColor: 'white',
+          padding: '16px 24px',
+          borderRadius: 0,
+          borderBottom: '1px solid #e5e5e5',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <BackBtn onClick={() => navigate(`/${datasetId}`)} />
 
-          <div className='flex gap-2'>
+          <Box sx={{ display: 'flex', gap: 1 }}>
             {!isEditing ? (
               <EditBtn onClick={() => setIsEditing(true)} />
             ) : (
-              <>
+              <Box sx={{ display: 'flex', gap: 1 }}>
                 <CancelBtn
                   onClick={handleCancel}
                   disabled={isButtonsDisabled}
@@ -143,44 +223,73 @@ function RowDetail() {
                   disabled={isButtonsDisabled || !hasChanges}
                   isLoading={updateRowMutation.isPending}
                 />
-              </>
+              </Box>
             )}
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Paper>
 
       {/* Row data display */}
-      <div className='flex-1 p-6 overflow-auto'>
-        <div className='bg-white rounded-lg shadow border border-[#e5e5e5]'>
-          <div className='px-6 py-4 border-b border-[#e5e5e5]'>
-            <h2 className='text-lg font-medium text-gray-900'>Row Data</h2>
-          </div>
+      <Box sx={{ flex: 1, p: 3, overflow: 'auto' }}>
+        <Paper
+          elevation={1}
+          sx={{
+            borderRadius: '8px',
+            border: '1px solid #e5e5e5',
+          }}
+        >
+          <Box sx={{ px: 3, py: 2 }}>
+            <Typography
+              variant='h6'
+              sx={{
+                fontSize: '18px',
+                fontWeight: 500,
+                color: '#111827',
+              }}
+            >
+              Row Data
+            </Typography>
+          </Box>
 
-          <div className='p-6'>
-            <div className='grid gap-4'>
+          <Divider sx={{ borderColor: '#e5e5e5' }} />
+
+          <Box sx={{ p: 3 }}>
+            <Box sx={{ display: 'grid', gap: 2 }}>
               {Object.entries(isEditing ? editedData : rowData.data).map(
                 ([key, value]) => (
-                  <div
+                  <Box
                     key={key}
-                    className='grid grid-cols-1 md:grid-cols-3 gap-2'
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 2fr',
+                      gap: 1,
+                    }}
                   >
-                    <div className='font-medium text-[#32302c] bg-[#f9f8f7] p-2 rounded-lg'>
+                    <Box
+                      sx={{
+                        fontWeight: 500,
+                        color: '#32302c',
+                        backgroundColor: '#f9f8f7',
+                        padding: '8px',
+                        borderRadius: '8px',
+                      }}
+                    >
                       {key}
-                    </div>
+                    </Box>
                     <EditableField
                       value={value}
                       fieldKey={key}
                       onChange={handleFieldChange}
                       isEditing={isEditing}
                     />
-                  </div>
+                  </Box>
                 )
               )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+    </Box>
   );
 }
 

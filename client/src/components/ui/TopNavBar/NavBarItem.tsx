@@ -1,3 +1,4 @@
+import { IconButton } from '@mui/material';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
 interface ItemProps {
@@ -29,12 +30,19 @@ function NavBarItem({ title, onClick, onClose, isActive = false }: ItemProps) {
       </span>
 
       {onClose && (
-        <button
+        <IconButton
           onClick={handleCloseClick}
-          className='absolute flex justify-center items-center right-0 inset-y-0 z-10 pr-2 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
+          className='!absolute !right-0 !inset-y-0 !z-10 !pr-2 !opacity-0 group-hover:!opacity-100 !transition-opacity hover:!bg-transparent'
+          size='small'
+          disableRipple
+          sx={{
+            '&:hover': {
+              backgroundColor: 'transparent',
+            },
+          }}
         >
-          <CloseOutlinedIcon className='!w-5 !h-5 !text-[#91918e] hover:bg-[#e8e7e7] rounded-sm transition-colors' />
-        </button>
+          <CloseOutlinedIcon className='!w-5 !h-5 !text-[#91918e] hover:!bg-[#e8e7e7] !rounded-sm !transition-colors' />
+        </IconButton>
       )}
 
       {/* Hides Text Overflow */}

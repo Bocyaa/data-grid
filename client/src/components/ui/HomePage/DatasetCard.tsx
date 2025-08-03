@@ -2,11 +2,20 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 
+import {
+  IconButton,
+  Tooltip,
+  Card,
+  CardContent,
+  CardActionArea,
+  Typography,
+  Box,
+} from '@mui/material';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 import type { Dataset } from '@/types';
-import ConfirmDialog from '../ConfirmDialog';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 import { useDeleteDataset } from '@/hooks/useDatasets';
 import { useNavBarTabs } from '@/contexts/hooks/useNavBarTabs';
@@ -61,38 +70,130 @@ function DatasetCard({ dataset }: CardProps) {
   };
 
   return (
-    <div
-      key={dataset.id}
-      onClick={(e) => handleDatasetClick(dataset, e)}
-      className='relative flex flex-col py-6 border border-[#eeeeec] hover:border-[#d6d6d4] rounded-3xl aspect-square w-50 transition-colors overflow-hidden cursor-pointer'
+    <Card
+      sx={{
+        position: 'relative',
+        aspectRatio: '1',
+        width: '200px',
+        borderRadius: '24px',
+        border: '1px solid #eeeeec',
+        transition: 'all 0.2s ease',
+        overflow: 'hidden',
+        '&:hover': {
+          borderColor: '#d6d6d4',
+          boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
+        },
+      }}
     >
-      <div className='z-10 pb-2 pt-7 px-4'>
-        <DescriptionOutlinedIcon className={`!w-12 !h-12 !text-[#91918e]`} />
-      </div>
-      <div className='flex flex-col justify-between h-full'>
-        <h2 className='leading-5 font-medium text-gray-900 px-6'>
-          {dataset.name}
-        </h2>
-
-        <span className='text-gray-500 text-xs px-6'>
-          {dataset.rowCount} rows
-        </span>
-      </div>
-
-      <button
-        className='group absolute z-10 top-4 right-5'
-        onClick={handleDeleteDataset}
+      <CardActionArea
+        onClick={(e) => handleDatasetClick(dataset, e)}
+        sx={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          padding: 0,
+        }}
       >
-        <DeleteOutlineOutlinedIcon className='!w-6 !h-6 text-[#a6a299] hover:text-red-700 cursor-pointer' />
+        {/* Background decoration */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '80px',
+            backgroundColor: '#f8f8f7',
+          }}
+        />
 
-        <div className='absolute -right-2 top-8 px-2 py-1 rounded-lg flex items-center bg-[#0f0f0f] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none'>
-          <span className='text-xs whitespace-nowrap text-[#ffffff] font-medium'>
-            Delete Dataset
-          </span>
-        </div>
-      </button>
+        <CardContent
+          sx={{
+            position: 'relative',
+            zIndex: 1,
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            paddingTop: '28px',
+            paddingBottom: '24px',
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            '&:last-child': {
+              paddingBottom: '24px',
+            },
+          }}
+        >
+          {/* Icon */}
+          <Box sx={{ paddingBottom: '8px', paddingTop: '28px' }}>
+            <DescriptionOutlinedIcon
+              sx={{
+                width: '48px',
+                height: '48px',
+                color: '#91918e',
+              }}
+            />
+          </Box>
 
-      <div className='absolute bg-[#f8f8f7] top-0 inset-x-0 h-20'></div>
+          {/* Content */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              height: '100%',
+              paddingLeft: '8px',
+              paddingRight: '8px',
+            }}
+          >
+            <Typography
+              variant='h6'
+              sx={{
+                fontSize: '16px',
+                fontWeight: 500,
+                lineHeight: '20px',
+                color: '#111827',
+                marginBottom: 'auto',
+              }}
+            >
+              {dataset.name}
+            </Typography>
+
+            <Typography
+              variant='caption'
+              sx={{
+                fontSize: '12px',
+                color: '#6b7280',
+              }}
+            >
+              {dataset.rowCount} rows
+            </Typography>
+          </Box>
+        </CardContent>
+      </CardActionArea>
+
+      {/* Delete Button */}
+      <Tooltip title='Delete Dataset' placement='top'>
+        <IconButton
+          onClick={handleDeleteDataset}
+          size='small'
+          sx={{
+            position: 'absolute',
+            top: 16,
+            right: 20,
+            zIndex: 10,
+            '& .MuiSvgIcon-root': {
+              color: '#a6a299',
+              transition: 'color 0.2s ease',
+              '&:hover': {
+                color: '#dc2626',
+              },
+            },
+          }}
+        >
+          <DeleteOutlineOutlinedIcon sx={{ width: '24px', height: '24px' }} />
+        </IconButton>
+      </Tooltip>
 
       <ConfirmDialog
         isOpen={showConfirmDialog}
@@ -103,7 +204,7 @@ function DatasetCard({ dataset }: CardProps) {
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
       />
-    </div>
+    </Card>
   );
 }
 

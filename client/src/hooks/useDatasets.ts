@@ -12,8 +12,8 @@ import {
   deleteDataset,
   deleteDatasetRow,
   updateDatasetRow,
-} from '../api/datasets';
-import type { DatasetsQueryParams, DatasetQueryParams } from '../types/api';
+} from '@/api/datasets';
+import type { DatasetsQueryParams, DatasetQueryParams } from '@/types/api';
 
 // Hook to fetch all datasets
 export function useDatasets(params: DatasetsQueryParams = {}) {

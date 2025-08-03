@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ActiveDatasetContext } from '../ActiveDatasetContext';
+import { ActiveDatasetContext } from '@/contexts/ActiveDatasetContext';
 
 export function useActiveDataset() {
   const context = useContext(ActiveDatasetContext);

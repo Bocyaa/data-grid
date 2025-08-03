@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { TextField, Button, Box } from '@mui/material';
 
 interface EditableFieldProps {
   value: any;
@@ -67,55 +68,107 @@ function EditableField({
     }, 0);
   };
 
+  // Display mode - show the value without editing
   if (!isEditing) {
     return (
-      <div className='md:col-span-2 p-2 border border-[#e5e5e5] rounded-lg'>
+      <Box
+        sx={{
+          p: 1,
+          backgroundColor: '#f9fafb',
+          borderRadius: '6px',
+          border: '1px solid #e5e7eb',
+          fontFamily: 'monospace',
+          fontSize: '14px',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+        }}
+      >
         {value !== null && value !== undefined ? (
-          typeof value === 'object' ? (
-            <pre className='whitespace-pre-wrap text-sm'>
-              {JSON.stringify(value, null, 2)}
-            </pre>
-          ) : (
-            String(value)
-          )
+          String(value)
         ) : (
-          <span className='text-gray-400 italic'>null</span>
+          <span style={{ color: '#9ca3af', fontStyle: 'italic' }}>null</span>
         )}
-      </div>
+      </Box>
     );
   }
 
   return (
-    <div className='md:col-span-2'>
+    <Box>
       {isTextarea ? (
-        <textarea
-          ref={textareaRef}
+        <TextField
+          inputRef={textareaRef}
+          multiline
+          rows={4}
           value={localValue}
           onChange={(e) => handleValueChange(e.target.value)}
-          className='w-full p-2 border border-[#e5e5e5] rounded-lg resize-vertical min-h-[80px] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
           placeholder='Enter value (JSON objects/arrays supported)'
+          fullWidth
+          variant='outlined'
+          size='small'
+          sx={{
+            '& .MuiInputBase-input': {
+              fontFamily: 'monospace',
+              fontSize: '14px',
+            },
+            '& .MuiOutlinedInput-root': {
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#0094f6',
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#0094f6',
+              },
+            },
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#e5e5e5',
+            },
+          }}
         />
       ) : (
-        <div className='flex gap-2'>
-          <input
-            ref={inputRef}
-            type='text'
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <TextField
+            inputRef={inputRef}
             value={localValue}
             onChange={(e) => handleValueChange(e.target.value)}
-            className='flex-1 p-2 border border-[#e5e5e5] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
             placeholder='Enter value'
+            fullWidth
+            variant='outlined'
+            size='small'
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0094f6',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0094f6',
+                },
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#e5e5e5',
+              },
+            }}
           />
-          <button
-            type='button'
+          <Button
             onClick={toggleToTextarea}
-            className='px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-colors'
+            variant='outlined'
+            size='small'
             title='Switch to multiline editor'
+            sx={{
+              minWidth: 'auto',
+              px: 2,
+              backgroundColor: '#f5f5f5',
+              color: '#666',
+              borderColor: '#d1d5db',
+              '&:hover': {
+                backgroundColor: '#e5e5e5',
+                borderColor: '#d1d5db',
+              },
+            }}
           >
             ⋯
-          </button>
-        </div>
+          </Button>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
