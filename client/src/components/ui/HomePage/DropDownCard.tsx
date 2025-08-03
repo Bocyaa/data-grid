@@ -1,8 +1,10 @@
 import { useState, useRef, useCallback } from 'react';
+import toast from 'react-hot-toast';
+
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CircularProgress from '@mui/material/CircularProgress';
-import toast from 'react-hot-toast';
+
 import { useUploadDataset } from '../../../hooks/useDatasets';
 
 interface CardProps {

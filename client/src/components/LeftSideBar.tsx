@@ -1,12 +1,14 @@
+import { useNavigate } from 'react-router';
+
+import { useDatasets } from '@/hooks/useDatasets';
+import { useActiveDataset } from '@/contexts/hooks/useActiveDataset';
+import { useNavBarTabs } from '@/contexts/hooks/useNavBarTabs';
+
 import LogoTitle from './ui/LeftSideBar/LogoTitle';
 import Signature from './ui/LeftSideBar/Signature';
 import TablesListContainer from './ui/LeftSideBar/TablesListContainer';
 import TablesListItem from './ui/LeftSideBar/TablesListItem';
 import UploadButton from './ui/LeftSideBar/UploadButton';
-import { useDatasets } from '../hooks/useDatasets';
-import { useActiveDataset } from '../hooks/useActiveDataset';
-import { useNavBarTabs } from '../hooks/useNavBarTabs';
-import { useNavigate } from 'react-router';
 
 function LeftSideBar() {
   const { data: datasetsResponse } = useDatasets();

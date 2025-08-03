@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import { Button, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
-import { useUploadDataset } from '../../../hooks/useDatasets';
-import { useNavBarTabs } from '../../../hooks/useNavBarTabs';
+
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import { Button, CircularProgress } from '@mui/material';
+import { useUploadDataset } from '@/hooks/useDatasets';
+import { useNavBarTabs } from '@/contexts/hooks/useNavBarTabs';
 
 function UploadButton() {
   const fileInputRef = useRef<HTMLInputElement>(null);

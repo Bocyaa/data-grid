@@ -1,9 +1,10 @@
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import { useNavigate } from 'react-router';
+
+import { useActiveDataset } from '@/contexts/hooks/useActiveDataset';
+import { useNavBarTabs } from '@/contexts/hooks/useNavBarTabs';
 
 import NavBarItem from './ui/TopNavBar/NavBarItem';
-import { useActiveDataset } from '../hooks/useActiveDataset';
-import { useNavBarTabs } from '../hooks/useNavBarTabs';
-import { useNavigate } from 'react-router';
+import PlusBtn from './ui/TopNavBar/PlusBtn';
 
 function TopNavBar() {
   const { isDatasetActive, activeDatasetId, isHomeActive } = useActiveDataset();
@@ -61,14 +62,7 @@ function TopNavBar() {
       </div>
 
       <div className='flex items-center border-b border-[#eeeeec] pl-2 min-w-10'>
-        {!isHomeActive && (
-          <button
-            onClick={() => navigate('/')}
-            className='cursor-pointer hover:bg-[#f1f0ef] rounded-md transition-colors'
-          >
-            <AddOutlinedIcon className='!w-6 !h-6 !text-[#91918e]' />
-          </button>
-        )}
+        {!isHomeActive && <PlusBtn />}
       </div>
     </div>
   );

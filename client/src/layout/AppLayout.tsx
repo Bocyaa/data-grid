@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router';
-import LeftSideBar from '../components/LeftSideBar';
-import TopNavBar from '../components/TopNavBar';
-import { ActiveDatasetProvider } from '../contexts/ActiveDatasetContext';
-import { NavBarTabsProvider } from '../contexts/NavBarTabsContext';
+import LeftSideBar from '@/components/LeftSideBar';
+import TopNavBar from '@/components/TopNavBar';
+import { NavBarTabsProvider } from '@/contexts/providers/NavBarTabsProvider';
+import { ActiveDatasetProvider } from '@/contexts/providers/ActiveDatasetProvider';
 
 function AppLayout() {
   return (

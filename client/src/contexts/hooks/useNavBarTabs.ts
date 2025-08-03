@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { NavBarTabsContext } from '../contexts/NavBarTabsContext';
+import { NavBarTabsContext } from '../NavBarTabsContext';
 
 export function useNavBarTabs() {
   const context = useContext(NavBarTabsContext);

@@ -1,11 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
+
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import toast from 'react-hot-toast';
-import type { Dataset } from '../../../types';
-import { useDeleteDataset, useNavBarTabs } from '../../../hooks';
-import { useNavigate } from 'react-router';
+
+import type { Dataset } from '@/types';
 import ConfirmDialog from '../ConfirmDialog';
+
+import { useDeleteDataset } from '@/hooks/useDatasets';
+import { useNavBarTabs } from '@/contexts/hooks/useNavBarTabs';
 
 interface CardProps {
   dataset: Dataset;
