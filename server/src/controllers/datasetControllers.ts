@@ -240,6 +240,48 @@ export async function deleteRowById(req: Request, res: Response) {
   }
 }
 
+export async function updateRowById(req: Request, res: Response) {
+  const datasetId = parseInt(req.params.datasetId);
+  const rowId = parseInt(req.params.rowId);
+  const { data } = req.body;
+
+  if (isNaN(datasetId) || isNaN(rowId)) {
+    throw { status: 400, message: 'Invalid ID format' };
+  }
+
+  if (!data || typeof data !== 'object') {
+    throw { status: 400, message: 'Invalid data format. Expected object.' };
+  }
+
+  try {
+    const existingRow = await prisma.row.findFirst({
+      where: { id: rowId, datasetId },
+    });
+
+    if (!existingRow) {
+      throw { status: 404, message: 'Row not found' };
+    }
+
+    const updatedRow = await prisma.row.update({
+      where: { id: rowId },
+      data: { data },
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        id: updatedRow.id,
+        datasetId: updatedRow.datasetId,
+        data: updatedRow.data,
+      },
+      message: `Row ${rowId} updated successfully.`,
+    });
+  } catch (error) {
+    console.log(error);
+    throw { status: 500, message: 'Failed to update row' };
+  }
+}
+
 export async function uploadDataset(req: Request, res: Response) {
   const file = req.file;
 

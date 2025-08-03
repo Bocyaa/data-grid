@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const multer_1 = __importDefault(require("multer"));
+const datasetControllers_1 = require("controllers/datasetControllers");
+const validate_1 = require("middleware/validate");
+const datasetValidators_1 = require("validators/datasetValidators");
+const router = express_1.default.Router();
+const upload = (0, multer_1.default)({ storage: multer_1.default.memoryStorage() });
+router.get('/datasets', (0, validate_1.validateQuery)(datasetValidators_1.getDatasetQuerySchema), datasetControllers_1.getAllDatasets);
+router.get('/dataset/:datasetId', (0, validate_1.validateParams)(datasetValidators_1.datasetIdSchema), datasetControllers_1.getDatasetById);
+router.get('/dataset/:datasetId/:rowId', (0, validate_1.validateParams)(datasetValidators_1.rowIdSchema), datasetControllers_1.getDatasetRowById);
+router.delete('/dataset/:datasetId', (0, validate_1.validateParams)(datasetValidators_1.datasetIdSchema), datasetControllers_1.deleteDatasetById);
+router.delete('/dataset/:datasetId/:rowId', (0, validate_1.validateParams)(datasetValidators_1.rowIdSchema), datasetControllers_1.deleteRowById);
+router.put('/dataset/:datasetId/:rowId', (0, validate_1.validateParams)(datasetValidators_1.rowIdSchema), datasetControllers_1.updateRowById);
+router.post('/dataset', upload.single('file'), datasetControllers_1.uploadDataset);
+exports.default = router;

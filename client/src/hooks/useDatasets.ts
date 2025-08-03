@@ -11,6 +11,7 @@ import {
   uploadDataset,
   deleteDataset,
   deleteDatasetRow,
+  updateDatasetRow,
 } from '../api/datasets';
 import type { DatasetsQueryParams, DatasetQueryParams } from '../types/api';
 
@@ -104,6 +105,34 @@ export function useDeleteDatasetRow() {
       deleteDatasetRow(datasetId, rowId),
     onSuccess: (_, { datasetId }) => {
       // Invalidate dataset queries to refetch with updated data
+      queryClient.invalidateQueries({
+        queryKey: ['dataset', datasetId],
+        exact: false,
+      });
+    },
+  });
+}
+
+// Hook to update a row in a dataset
+export function useUpdateDatasetRow() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      datasetId,
+      rowId,
+      data,
+    }: {
+      datasetId: number;
+      rowId: number;
+      data: Record<string, any>;
+    }) => updateDatasetRow(datasetId, rowId, data),
+    onSuccess: (_, { datasetId, rowId }) => {
+      // Invalidate both the specific row and dataset queries
+      queryClient.invalidateQueries({
+        queryKey: ['dataset-row', datasetId, rowId],
+        exact: true,
+      });
       queryClient.invalidateQueries({
         queryKey: ['dataset', datasetId],
         exact: false,

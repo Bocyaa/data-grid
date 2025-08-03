@@ -6,6 +6,7 @@ import {
   getDatasetRowById,
   deleteDatasetById,
   deleteRowById,
+  updateRowById,
   uploadDataset,
 } from 'controllers/datasetControllers';
 
@@ -41,6 +42,12 @@ router.delete(
   '/dataset/:datasetId/:rowId',
   validateParams(rowIdSchema),
   deleteRowById
+);
+
+router.put(
+  '/dataset/:datasetId/:rowId',
+  validateParams(rowIdSchema),
+  updateRowById
 );
 
 router.post('/dataset', upload.single('file'), uploadDataset);

@@ -132,3 +132,27 @@ export async function deleteDatasetRow(
 
   return response.json();
 }
+
+// Update specific row in dataset
+export async function updateDatasetRow(
+  datasetId: number,
+  rowId: number,
+  data: Record<string, any>
+): Promise<{ success: boolean; data: any; message: string }> {
+  const response = await fetch(
+    `${API_BASE_URL}/dataset/${datasetId}/${rowId}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to update row: ${response.statusText}`);
+  }
+
+  return response.json();
+}

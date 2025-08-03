@@ -1,5 +1,11 @@
 import { useParams, useNavigate } from 'react-router';
-import { useDatasetRow } from '../hooks/useDatasets';
+import { useState, useEffect } from 'react';
+import { useDatasetRow, useUpdateDatasetRow } from '../hooks/useDatasets';
+import BackBtn from '@/components/ui/RowDetail/BackBtn';
+import SaveBtn from '@/components/ui/RowDetail/SaveBtn';
+import CancelBtn from '@/components/ui/RowDetail/CancelBtn';
+import EditableField from '@/components/ui/RowDetail/EditableField';
+import EditBtn from '@/components/ui/RowDetail/EditBtn';
 
 function RowDetail() {
   const { datasetId, rowId } = useParams<{
@@ -8,6 +14,10 @@ function RowDetail() {
   }>();
   const navigate = useNavigate();
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedData, setEditedData] = useState<Record<string, any>>({});
+  const [originalData, setOriginalData] = useState<Record<string, any>>({});
+
   const {
     data: rowResponse,
     isLoading,
@@ -15,7 +25,55 @@ function RowDetail() {
     refetch,
   } = useDatasetRow(Number(datasetId), Number(rowId));
 
+  const updateRowMutation = useUpdateDatasetRow();
+
   const rowData = rowResponse?.data;
+
+  // Set original data when row data is loaded
+  useEffect(() => {
+    if (rowData?.data) {
+      setOriginalData(rowData.data);
+      setEditedData(rowData.data);
+    }
+  }, [rowData]);
+
+  const handleFieldChange = (key: string, value: any) => {
+    setEditedData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const handleSave = () => {
+    if (!datasetId || !rowId) return;
+
+    updateRowMutation.mutate(
+      {
+        datasetId: Number(datasetId),
+        rowId: Number(rowId),
+        data: editedData,
+      },
+      {
+        onSuccess: () => {
+          setIsEditing(false);
+          setOriginalData(editedData);
+        },
+        onError: (error) => {
+          console.error('Failed to save changes:', error);
+          // You could add toast notification here
+        },
+      }
+    );
+  };
+
+  const handleCancel = () => {
+    setEditedData(originalData);
+    setIsEditing(false);
+  };
+
+  const hasChanges =
+    JSON.stringify(editedData) !== JSON.stringify(originalData);
+  const isButtonsDisabled = updateRowMutation.isPending;
 
   // Loading state
   if (isLoading) {
@@ -67,46 +125,57 @@ function RowDetail() {
   return (
     <div className='h-full flex flex-col'>
       {/* Header */}
-      <div className='bg-white border-b border-gray-200 px-6 py-4'>
+      <div className='bg-white px-6 pt-4'>
         <div className='flex items-center justify-between'>
-          <button
-            onClick={() => navigate(`/${datasetId}`)}
-            className='px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600'
-          >
-            Back to Dataset
-          </button>
+          <BackBtn onClick={() => navigate(`/${datasetId}`)} />
+
+          <div className='flex gap-2'>
+            {!isEditing ? (
+              <EditBtn onClick={() => setIsEditing(true)} />
+            ) : (
+              <>
+                <CancelBtn
+                  onClick={handleCancel}
+                  disabled={isButtonsDisabled}
+                />
+                <SaveBtn
+                  onClick={handleSave}
+                  disabled={isButtonsDisabled || !hasChanges}
+                  isLoading={updateRowMutation.isPending}
+                />
+              </>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Row data display */}
       <div className='flex-1 p-6 overflow-auto'>
-        <div className='bg-white rounded-lg shadow border'>
-          <div className='px-6 py-4 border-b border-gray-200'>
+        <div className='bg-white rounded-lg shadow border border-[#e5e5e5]'>
+          <div className='px-6 py-4 border-b border-[#e5e5e5]'>
             <h2 className='text-lg font-medium text-gray-900'>Row Data</h2>
           </div>
+
           <div className='p-6'>
             <div className='grid gap-4'>
-              {Object.entries(rowData.data).map(([key, value]) => (
-                <div
-                  key={key}
-                  className='grid grid-cols-1 md:grid-cols-3 gap-2'
-                >
-                  <div className='font-medium text-gray-700 bg-gray-50 p-2 rounded'>
-                    {key}
+              {Object.entries(isEditing ? editedData : rowData.data).map(
+                ([key, value]) => (
+                  <div
+                    key={key}
+                    className='grid grid-cols-1 md:grid-cols-3 gap-2'
+                  >
+                    <div className='font-medium text-[#32302c] bg-[#f9f8f7] p-2 rounded-lg'>
+                      {key}
+                    </div>
+                    <EditableField
+                      value={value}
+                      fieldKey={key}
+                      onChange={handleFieldChange}
+                      isEditing={isEditing}
+                    />
                   </div>
-                  <div className='md:col-span-2 p-2 border rounded'>
-                    {value !== null && value !== undefined ? (
-                      typeof value === 'object' ? (
-                        JSON.stringify(value, null, 2)
-                      ) : (
-                        String(value)
-                      )
-                    ) : (
-                      <span className='text-gray-400 italic'>null</span>
-                    )}
-                  </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
         </div>
