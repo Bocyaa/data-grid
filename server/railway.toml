@@ -2,9 +2,9 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "npm run deploy && npm start"
-healthcheckPath = "/api/datasets"
-healthcheckTimeout = 30
+startCommand = "npm start"
+healthcheckPath = "/health"
+healthcheckTimeout = 60
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
 
