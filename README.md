@@ -2,7 +2,7 @@
 
 A modern full-stack web application for visualizing, editing, and managing CSV datasets with an interactive data grid interface.
 
-[![Live Demo](https://img.shields.io/badge/🚀-Live%20Demo-blue?style=for-the-badge)]([https://your-demo-link.com](https://data-grid-dmlznzw5h-khabirovs-projects.vercel.app/))
+[![Live Demo](https://img.shields.io/badge/🚀-Live%20Demo-blue?style=for-the-badge)](https://data-grid-dmlznzw5h-khabirovs-projects.vercel.app/)
 
 ## Features
 
