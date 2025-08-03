@@ -85,6 +85,7 @@ export async function getDatasetById(req: Request, res: Response) {
   const datasetId = parseInt(req.params.datasetId);
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 50;
+  const searchQuery = req.query.searchQuery as string;
 
   if (isNaN(datasetId)) {
     throw { status: 400, message: 'Invalid dataset ID' };
@@ -101,34 +102,38 @@ export async function getDatasetById(req: Request, res: Response) {
     throw { status: 400, message: 'Dataset not found' };
   }
 
-  // Get total count of rows for this dataset
-  const totalRows = await prisma.row.count({
+  // Get all rows for this dataset (we need to filter them in memory for search)
+  const allRows = await prisma.row.findMany({
     where: { datasetId },
-  });
-
-  // Get paginated rows
-  const rows = await prisma.row.findMany({
-    where: { datasetId },
-    skip,
-    take: limit,
     orderBy: { id: 'asc' },
   });
 
-  const rowData = rows.map((r) => ({ id: r.id, data: r.data }));
+  let filteredRows = allRows;
+
+  // Apply search filter if searchQuery is provided
+  if (searchQuery && searchQuery.trim()) {
+    filteredRows = allRows.filter((row) => {
+      if (isJsonObject(row.data)) {
+        const rowData = row.data as Record<string, unknown>;
+        // Search in all columns
+        return Object.values(rowData).some((value) =>
+          value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
+      return false;
+    });
+  }
+
+  // Apply pagination to filtered results
+  const totalFiltered = filteredRows.length;
+  const paginatedRows = filteredRows.slice(skip, skip + limit);
+
+  const rowData = paginatedRows.map((r) => ({ id: r.id, data: r.data }));
   let columns: string[] = [];
 
   // Get columns from the first row if available
-  if (rowData.length > 0 && isJsonObject(rowData[0].data)) {
-    columns = Object.keys(rowData[0].data);
-  } else if (totalRows > 0) {
-    // If current page has no rows but dataset has rows, get columns from first row in dataset
-    const firstRow = await prisma.row.findFirst({
-      where: { datasetId },
-      orderBy: { id: 'asc' },
-    });
-    if (firstRow && isJsonObject(firstRow.data)) {
-      columns = Object.keys(firstRow.data);
-    }
+  if (allRows.length > 0 && isJsonObject(allRows[0].data)) {
+    columns = Object.keys(allRows[0].data);
   }
 
   res.json({
@@ -139,13 +144,15 @@ export async function getDatasetById(req: Request, res: Response) {
       pagination: {
         page,
         limit,
-        total: totalRows,
-        totalPages: Math.ceil(totalRows / limit),
-        hasNextPage: page * limit < totalRows,
+        total: totalFiltered,
+        totalPages: Math.ceil(totalFiltered / limit),
+        hasNextPage: page * limit < totalFiltered,
         hasPrevPage: page > 1,
       },
     },
-    message: 'Dataset found',
+    message: searchQuery
+      ? `Found ${totalFiltered} matching rows`
+      : 'Dataset found',
   });
 }
 

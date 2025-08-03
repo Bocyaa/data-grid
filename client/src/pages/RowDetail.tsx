@@ -69,12 +69,6 @@ function RowDetail() {
       {/* Header */}
       <div className='bg-white border-b border-gray-200 px-6 py-4'>
         <div className='flex items-center justify-between'>
-          <div>
-            <h1 className='text-xl font-semibold text-gray-900'>Row Details</h1>
-            <p className='text-sm text-gray-500'>
-              Dataset {datasetId} - Row {rowId}
-            </p>
-          </div>
           <button
             onClick={() => navigate(`/${datasetId}`)}
             className='px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600'

@@ -10,6 +10,7 @@ import {
   fetchDatasetRow,
   uploadDataset,
   deleteDataset,
+  deleteDatasetRow,
 } from '../api/datasets';
 import type { DatasetsQueryParams, DatasetQueryParams } from '../types/api';
 
@@ -89,6 +90,23 @@ export function useDeleteDataset() {
       queryClient.invalidateQueries({
         queryKey: ['datasets'],
         exact: false, // This will match all queries that start with ['datasets']
+      });
+    },
+  });
+}
+
+// Hook to delete a row from a dataset
+export function useDeleteDatasetRow() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ datasetId, rowId }: { datasetId: number; rowId: number }) =>
+      deleteDatasetRow(datasetId, rowId),
+    onSuccess: (_, { datasetId }) => {
+      // Invalidate dataset queries to refetch with updated data
+      queryClient.invalidateQueries({
+        queryKey: ['dataset', datasetId],
+        exact: false,
       });
     },
   });

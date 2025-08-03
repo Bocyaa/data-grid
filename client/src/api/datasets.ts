@@ -113,3 +113,22 @@ export async function deleteDataset(
 
   return response.json();
 }
+
+// Delete specific row from dataset
+export async function deleteDatasetRow(
+  datasetId: number,
+  rowId: number
+): Promise<{ success: boolean; message: string }> {
+  const response = await fetch(
+    `${API_BASE_URL}/dataset/${datasetId}/${rowId}`,
+    {
+      method: 'DELETE',
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete row: ${response.statusText}`);
+  }
+
+  return response.json();
+}

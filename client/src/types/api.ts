@@ -45,6 +45,8 @@ export interface DatasetsQueryParams {
 export interface DatasetQueryParams {
   page?: number;
   limit?: number;
+  searchField?: string;
+  searchQuery?: string;
 }
 
 // API Response Types
