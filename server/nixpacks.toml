@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["nodejs_18", "npm"]
+nixPkgs = ["nodejs-18_x"]
 
 [phases.install]
 cmds = ["npm ci"]
@@ -9,6 +9,3 @@ cmds = ["npm run deploy"]
 
 [start]
 cmd = "npm start"
-
-[variables]
-NODE_ENV = "production"
