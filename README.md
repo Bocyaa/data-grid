@@ -14,14 +14,14 @@ A modern full-stack web application for visualizing, editing, and managing CSV d
 
 ## Features
 
-### 🗂️ Dataset Management
+### Dataset Management
 
 - **CSV Upload**: Drag & drop or click to upload CSV files
 - **Multi-Dataset Support**: Work with multiple datasets simultaneously
 - **Dataset Overview**: Quick preview and statistics for each dataset
 - **Bulk Operations**: Delete entire datasets with confirmation
 
-### 📋 Interactive Data Grid
+### Interactive Data Grid
 
 - **Advanced Grid Interface**: Powered by AG Grid with sorting, filtering, and resizing
 - **Real-time Search**: Search across any column with instant results
@@ -34,7 +34,7 @@ A modern full-stack web application for visualizing, editing, and managing CSV d
 - **Field Validation**: Ensure data integrity with type checking
 - **Save on Confirm**: Changes are persisted to the database on 'Save' click
 
-### 🎛️ User Experience
+### User Experience
 
 - **Tab Navigation**: Open multiple datasets in separate tabs
 - **Sidebar Navigation**: Quick access to all available datasets
@@ -60,7 +60,7 @@ A modern full-stack web application for visualizing, editing, and managing CSV d
 - **Multer** for file upload handling
 - **Papa Parse** for CSV processing
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -155,11 +155,11 @@ The backend provides a RESTful API for all data operations:
 
 Full API documentation available in the [server README](./server/README.md).
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [AG Grid](https://ag-grid.com/) for the data grid component
 - [Prisma](https://prisma.io/) for the ORM and database toolkit
