@@ -27,10 +27,9 @@ A modern full-stack web application for visualizing, editing, and managing CSV d
 
 ### ✏️ Data Editing
 
-- **Inline Editing**: Edit individual cells directly in the grid
 - **Row Detail View**: Detailed editing interface for complete row data
 - **Field Validation**: Ensure data integrity with type checking
-- **Auto-save**: Changes are automatically persisted to the database
+- **Save on Confirm**: Changes are persisted to the database on 'Save' click
 
 ### 🎛️ User Experience
 
@@ -38,16 +37,15 @@ A modern full-stack web application for visualizing, editing, and managing CSV d
 - **Sidebar Navigation**: Quick access to all available datasets
 - **Toast Notifications**: Real-time feedback for all operations
 - **Loading States**: Smooth loading indicators and error handling
-- **Keyboard Shortcuts**: Efficient navigation and operations
 
 ## 🛠️ Tech Stack
 
 ### Frontend
 
 - **React 19** with TypeScript
-- **TanStack Query** for server state management
-- **AG Grid Community** for data visualization
-- **Material-UI** for components and design system
+- **TanStack Query** for server state management and Caching
+- **AG Grid** for data visualization
+- **Material-UI** for components, design system and accessibility
 - **Tailwind CSS** for utility-first styling
 - **Vite** for fast development and building
 
@@ -114,7 +112,7 @@ data-grid/
 │   ├── src/
 │   │   ├── controllers/    # Request handlers
 │   │   ├── routes/         # API route definitions
-│   │   ├── middleware/     # Express middleware
+│   │   ├── middleware/     # Express & Error handling middlewares
 │   │   ├── validators/     # Data validation schemas
 │   │   └── utils/          # Utility functions
 │   └── README.md           # Backend documentation
@@ -149,7 +147,8 @@ The backend provides a RESTful API for all data operations:
 - `POST /api/dataset` - Upload new CSV dataset
 - `GET /api/dataset/:id` - Retrieve dataset rows
 - `PUT /api/dataset/:id/:rowId` - Update specific row
-- `DELETE /api/dataset/:id` - Remove entire dataset
+- `DELETE /api/dataset/:id` - Delete entire dataset
+- `DELETE /api/dataset/:datasetId/:rowId` - Delete single row
 
 Full API documentation available in the [server README](./server/README.md).
 
@@ -159,10 +158,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [AG Grid](https://ag-grid.com/) for the powerful data grid component
-- [Prisma](https://prisma.io/) for the excellent ORM and database toolkit
-- [TanStack Query](https://tanstack.com/query) for seamless server state management
-- [Material-UI](https://mui.com/) for the comprehensive component library
+- [AG Grid](https://ag-grid.com/) for the data grid component
+- [Prisma](https://prisma.io/) for the ORM and database toolkit
+- [TanStack Query](https://tanstack.com/query) for server state management and frontend caching
+- [Material-UI](https://mui.com/) for the component library
 
 ---
 
