@@ -24,7 +24,6 @@ A modern full-stack web application for visualizing, editing, and managing CSV d
 - **Real-time Search**: Search across any column with instant results
 - **Pagination**: Efficient handling of large datasets
 - **Row Selection**: Single and multi-row selection for bulk operations
-- **Responsive Design**: Optimized for desktop and mobile devices
 
 ### ✏️ Data Editing
 
